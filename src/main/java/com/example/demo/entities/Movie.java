@@ -1,6 +1,7 @@
 package com.example.demo.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.bson.codecs.pojo.annotations.BsonId;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import javax.validation.constraints.*;
@@ -8,7 +9,7 @@ import java.util.Map;
 
 public class Movie {
 
-    @Id
+    @BsonId
     private ObjectId id;
 
     @NotNull
