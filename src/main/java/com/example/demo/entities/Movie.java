@@ -3,7 +3,6 @@ package com.example.demo.entities;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.bson.codecs.pojo.annotations.BsonId;
 import org.bson.types.ObjectId;
-import org.springframework.data.annotation.Id;
 import javax.validation.constraints.*;
 import java.util.Map;
 
@@ -29,17 +28,18 @@ public class Movie {
     private String description;
 
     public Movie() {
-        title = "";
-        imdbRating = -1;
-        description = "";
     }
 
     public Movie replaceObject(Map movie) {
-        this.setTitle((String) movie.get("title"));
-        this.setImdbRating((float) movie.get("imdbRating"));
-        this.setDescription((String) movie.get("description"));
+        if(movie.containsKey("title"))
+            this.setTitle((String) movie.get("title"));
+        if(movie.containsKey("imdbRating"))
+            this.setImdbRating(((Double) movie.get("imdbRating")).floatValue());
+        if(movie.containsKey("description"))
+            this.setDescription((String) movie.get("description"));
         return this;
     }
+
 
     public Movie(ObjectId id, String title, float imdbRating, String description) {
         this.id = id;
@@ -70,9 +70,7 @@ public class Movie {
     }
 
     public void setTitle(String title) {
-        if(title.matches(".{1,255}") && title.matches("(?i).*[a-zA-Z]+.*")){
-            this.title = title;
-        }
+        this.title = title;
     }
 
     public float getImdbRating() {
@@ -81,9 +79,7 @@ public class Movie {
 
     public void setImdbRating(float imdbRating) {
         float rating = Float.parseFloat(String.format("%2.1f", imdbRating).replaceAll(",","."));
-        if(rating >= 0 && rating <= 10){
-            this.imdbRating = rating;
-        }
+        this.imdbRating = rating;
     }
 
     public String getDescription() {
@@ -91,9 +87,7 @@ public class Movie {
     }
 
     public void setDescription(String description) {
-        if(description.matches(".{1,2000}") && description.matches(".*[a-zA-Z]+.*")) {
-            this.description = description;
-        }
+        this.description = description;
     }
 }
 

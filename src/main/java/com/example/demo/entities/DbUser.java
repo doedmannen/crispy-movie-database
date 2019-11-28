@@ -3,13 +3,17 @@ package com.example.demo.entities;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.bson.codecs.pojo.annotations.BsonId;
 import org.bson.types.ObjectId;
+import java.util.Set;
 
 public class DbUser {
     @BsonId
     private ObjectId id;
 
     private String username;
+
+    @JsonIgnore
     private String password;
+    private Set<String> roles;
 
     public DbUser() {
     }
@@ -17,12 +21,7 @@ public class DbUser {
     public DbUser(String username, String password) {
         this.username = username;
         this.password = password;
-    }
-
-    public DbUser(ObjectId id, String username, String password) {
-        this.id = id;
-        this.username = username;
-        this.password = password;
+        this.roles = Set.of("USER");
     }
 
     @JsonIgnore
@@ -36,6 +35,10 @@ public class DbUser {
 
     public void setId(String hexId) {
         this.id = new ObjectId(hexId);
+    }
+
+    public void setId(ObjectId id) {
+        this.id = id;
     }
 
     public String getUsername() {
@@ -52,6 +55,14 @@ public class DbUser {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public Set<String> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(Set<String> roles) {
+        this.roles = roles;
     }
 }
 

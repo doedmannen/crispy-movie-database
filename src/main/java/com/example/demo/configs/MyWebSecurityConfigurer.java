@@ -2,9 +2,9 @@ package com.example.demo.configs;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 
 @Configuration
@@ -15,8 +15,17 @@ public class MyWebSecurityConfigurer extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.authorizeRequests()
+        http
+                .httpBasic().and()
+
+                .authorizeRequests()
+
+                .antMatchers(HttpMethod.GET, "/api/movies/**").permitAll()
+
                 .antMatchers("/api/**").hasRole("USER")
+
+                .antMatchers("/**").permitAll()
+
                 .and().formLogin().permitAll().defaultSuccessUrl("/", true)
                 .and().logout().permitAll().logoutSuccessUrl("/")
                 .and().csrf().disable()
@@ -34,10 +43,6 @@ public class MyWebSecurityConfigurer extends WebSecurityConfigurerAdapter {
 //                .regexMatchers("^(?!\/api\/).+").hasRole("USER")
     }
 
-    @Override
-    public void configure(WebSecurity web) throws Exception {
-        web.ignoring().antMatchers("/assets/**");
-    }
 
     @Override
     public void configure(AuthenticationManagerBuilder auth) throws Exception {
